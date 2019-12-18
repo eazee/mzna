@@ -19,7 +19,7 @@ char peek(FILE *infile) {
     return c;
 }
 
-int parse(FILE* infile) {
+int parse(FILE* infile, TokenStream* ts) {
     int row = 1, col = 0;
     char c;
 
@@ -30,20 +30,117 @@ int parse(FILE* infile) {
         // FOR NOW just ignore newlines
         if(c == '\n') continue;
 
+        // Ignore whitespace
+        if(c == ' ') continue;
+
         // Comments
         if(c == '#') {
             do {
                 c = nextch(infile, &row, &col);
                 if(c == EOF) break;
             } while (c != '\n');
-            printf("JUST FOUND A COMMENT\n");
             continue;
         }
 
-        // Idents
-        if(isalnum(c)) {
-            // store the whole thing
-            // loop
+        // Colon (:)
+        if(c == ':') {
+            TokenStream_add(ts, row, col, ":", COLON);
+            continue;
+        }
+
+        // Assignment operator (->) OR minus sign
+        if(c == '-') {
+            if(peek(infile) == '>') {
+                TokenStream_add(ts, row, col, "->", ASSOP);
+                nextch(infile, &row, &col);
+                continue;
+            } else {
+                TokenStream_add(ts, row, col, "-", MINUSOP);
+                continue;
+            }
+        }
+
+        // Integer literals
+        if(isdigit(c) || (c == '.' && isdigit(peek(infile)))) {
+            size_t strsize = INIT_DIGIT_BUFFER;
+            char*  numstr  = malloc(strsize);
+            int    i       = 0;
+            int    srow    = row;
+            int    scol    = col;
+
+            do {
+                numstr[i] = c;
+                c = nextch(infile, &row, &col);
+                i++;
+                if(i > strsize) {
+                    strsize += INRC_DIGIT_BUFFER;
+                    numstr = realloc(numstr, strsize);
+                }
+            } while(isdigit(c) || c == '.');
+            ungetc(c, infile);
+            numstr[i] = '\0';
+            TokenStream_add(ts, row, col, numstr, NUMBER);
+            free(numstr);
+            continue;
+        }
+
+        // Idents and keywords
+        if(isalpha(c)) {
+            size_t strsize  = INIT_IDENT_BUFFER;
+            char*  identstr = malloc(strsize);
+            int    i        = 0;
+            int    srow     = row;
+            int    scol     = col;
+
+            do {
+                identstr[i] = c;
+                c = nextch(infile, &row, &col);
+                i++;
+                if(i > strsize) {
+                    strsize += INCR_IDENT_BUFFER;
+                    identstr = realloc(identstr, strsize);
+                }
+            } while(isalnum(c));
+            ungetc(c, infile);
+            identstr[i] = '\0';
+            if(strcmp(identstr, "in") == 0) {
+                TokenStream_add(ts, srow, scol, identstr, IN);
+            } else if(strcmp(identstr, "program") == 0) {
+                TokenStream_add(ts, srow, scol, identstr, PROGRAM);
+            } else {
+                TokenStream_add(ts, srow, scol, identstr, IDENT);
+            }
+            free(identstr);
+            continue;
+        }
+
+        // String literals
+        if(c == '"') {
+            int   strsize = INIT_STRLIT_BUFFER;
+            char* litstr  = malloc(strsize);
+            int   i       = 0;
+            int   srow    = row;
+            int   scol    = col;
+            c             = nextch(infile, &row, &col);
+
+            while(c != '"') {
+                if(c == EOF) {
+                    fprintf(stderr, "[%sParser Error%s] Unexpected end of file. Expected end of string literal at Row %d, Col %d\n",
+                        TRM_RED_BOLD, TRM_RESET, row, col);
+                    return 1;
+                }
+                litstr[i] = c;
+                c = nextch(infile, &row, &col);
+                i++;
+                if(i > strsize) {
+                    strsize += INCR_STRLIT_BUFFER;
+                    litstr = realloc(litstr, strsize);
+                }
+            }
+            litstr[i] = '\0';
+            TokenStream_add(ts, srow, scol, litstr, STRING);
+            free(litstr);
+            continue;
         }
 
         // Catch all else as error

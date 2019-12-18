@@ -1,9 +1,21 @@
 #include "include/mzna.h"
 
 int begin_compile(FILE* infile) {
-    parse(infile);
+    // Initialise
+    TokenStream ts;
+    TokenStream_init(&ts);
+
+    // Run compilation
+    parse(infile, &ts);
+
+    for(int i = 0; i < ts.size; i++) {
+        char tokstr[16];
+        printf("[%sToken%s at %d:%d] %d (%s)\n", TRM_BLUE_BOLD, TRM_RESET, ts.stream[i].row, ts.stream[i].col, ts.stream[i].type, ts.stream[i].value);
+    }
+
     // Clean up
     fclose(infile);
+    TokenStream_destroy(&ts);
     return 0;
 }
 
