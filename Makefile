@@ -1,19 +1,18 @@
-output=bin/
-source=src/
+outdir=bin/
+indir=src/
 
-include=$(source)include
-temp=$(output)temp
-
-headers=$(source)$(inc)mzna.h
+cc=gcc
+ld=gcc
 
 ldopts=
 ccopts=
 
-$(output)mzna: $(temp)mzna.o $(temp)parse.o
-	gcc -o $(output)mzna $(temp)mzna.o $(temp)parse.o $(ldopts)
+$(output)mzna: $(outdir)mzna.o $(outdir)parse.o
+	$(ld) -o $(outdir)mzna $(outdir)mzna.o $(outdir)parse.o $(ldopts)
+	rm -f $(outdir)*.o
 
-$(temp)mzna.o: $(source)mzna.c
-	gcc -o $(temp)mzna.o -c $(source)mzna.c $(ccopts)
+$(outdir)mzna.o: $(indir)mzna.c
+	$(cc) -o $(outdir)mzna.o -c $(indir)mzna.c $(ccopts)
 
-$(temp)parse.o: $(source)parse.c
-	gcc -o $(temp)parse.o -c $(source)parse.c $(ccopts)
+$(outdir)parse.o: $(indir)parse.c
+	$(cc) -o $(outdir)parse.o -c $(indir)parse.c $(ccopts)
