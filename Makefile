@@ -7,7 +7,7 @@ ld=gcc
 ldopts=
 ccopts=
 
-$(output)mzna: $(outdir)mzna.o $(outdir)parse.o
+$(outdir)mzna: $(outdir)mzna.o $(outdir)parse.o
 	$(ld) -o $(outdir)mzna $(outdir)mzna.o $(outdir)parse.o $(ldopts)
 	rm -f $(outdir)*.o
 
