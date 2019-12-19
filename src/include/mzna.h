@@ -14,4 +14,4 @@
 
 #include "lex.h"
 
-#endif
+#endif /* _mzna_h */

@@ -1,5 +1,5 @@
-#ifndef _parse_h
-#define _parse_h
+#ifndef _lex_h
+#define _lex_h
 
 #define INIT_IDENT_BUFFER  12
 #define INCR_IDENT_BUFFER  12
@@ -33,4 +33,4 @@ void TokenStream_init(TokenStream* ts);
 void TokenStream_add(TokenStream* ts, int row, int col, char* value, token_type_t toktype);
 void TokenStream_destroy(TokenStream* ts);
 
-#endif
+#endif /* _lex_h */
