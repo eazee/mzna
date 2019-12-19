@@ -19,7 +19,7 @@ char peek(FILE *infile) {
     return c;
 }
 
-int parse(FILE* infile, TokenStream* ts) {
+int lex(FILE* infile, TokenStream* ts) {
     int row = 1, col = 0;
     char c;
 

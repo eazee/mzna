@@ -6,7 +6,7 @@ int begin_compile(FILE* infile) {
     TokenStream_init(&ts);
 
     // Run compilation
-    parse(infile, &ts);
+    lex(infile, &ts);
 
     for(int i = 0; i < ts.size; i++) {
         char tokstr[16];

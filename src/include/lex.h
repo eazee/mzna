@@ -25,8 +25,8 @@ typedef struct {
     Token* stream;
 } TokenStream;
 
-/* parse.c */
-int parse(FILE* infile, TokenStream* ts);
+/* lex.c */
+int lex(FILE* infile, TokenStream* ts);
 
 /* token.c */
 void TokenStream_init(TokenStream* ts);

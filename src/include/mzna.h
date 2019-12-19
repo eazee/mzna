@@ -12,6 +12,6 @@
 #define TRM_BLUE      "\033[0;34m"
 #define TRM_BLUE_BOLD "\033[1;34m"
 
-#include "parse.h"
+#include "lex.h"
 
 #endif
