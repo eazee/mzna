@@ -100,7 +100,7 @@ int lex(FILE* infile, token_stream_t* ts) {
                     strsize += INCR_IDENT_BUFFER;
                     identstr = realloc(identstr, strsize);
                 }
-            } while(isalnum(c));
+            } while(isalnum(c) || c == '_');
             ungetc(c, infile);
             identstr[i] = '\0';
             if(strcmp(identstr, "in") == 0) {
