@@ -3,7 +3,7 @@
 
 #include <stddef.h>     // size_t
 
-typedef enum { ROOT, ASSIGN, LITERAL, VARIABLe, BINOP, COMPOP, FUNCTION, CALL, BLOCK } node_type_t;
+typedef enum { ROOT, ASSIGN, LITERAL, VARIABLE, BINOP, COMPOP, FUNCTION, CALL, BLOCK } node_type_t;
 typedef enum { CONDITION, BODY, IFBODY, ELSEBODY, PARAMETER, SOURCE, DESTINATION } node_relation_t;
 typedef union {
     char* string;
