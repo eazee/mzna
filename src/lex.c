@@ -145,19 +145,26 @@ int lex(FILE* infile, token_stream_t* ts) {
             int    i       = 0;
             int    srow    = row;
             int    scol    = col;
+            char   testc;
 
-            do {
+            while(1) {
                 numstr[i] = c;
-                c = nextch(infile, &row, &col);
                 i++;
                 if(i > strsize) {
-                    strsize += INRC_DIGIT_BUFFER;
+                    strsize += INCR_DIGIT_BUFFER;
                     numstr = realloc(numstr, strsize);
                 }
-            } while(isdigit(c) || c == '.');
-            ungetc(c, infile);
+
+                testc = peek(infile);
+                if(isdigit(testc) || testc == '.') {
+                    c = nextch(infile, &row, &col);
+                } else {
+                    break;
+                }
+            }
+
             numstr[i] = '\0';
-            token_stream_add(ts, row, col, numstr, NUMBER);
+            token_stream_add(ts, srow, scol, numstr, NUMBER);
             free(numstr);
             continue;
         }
@@ -187,18 +194,6 @@ int lex(FILE* infile, token_stream_t* ts) {
                     break;
                 }
             }
-
-            /*do {
-                identstr[i] = c;
-                c = nextch(infile, &row, &col);
-                i++;
-                if(i > strsize) {
-                    strsize += INCR_IDENT_BUFFER;
-                    identstr = realloc(identstr, strsize);
-                }
-                test_c = peek(infile);
-            } while(isalnum(test_c) || test_c == '_');*/
-            //ungetc(c, infile);
 
             identstr[i] = '\0';
             if(strcmp(identstr, "in") == 0) {
