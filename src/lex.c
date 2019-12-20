@@ -1,4 +1,8 @@
 #include "include/mzna.h"
+#include "include/lex.h"
+#include <string.h>         // strcmp
+#include <ctype.h>          // isalpha, isalnum, isdigit
+#include <stdlib.h>         // malloc, realloc, free
 
 char nextch(FILE* infile, int* row, int* col) {
     char c;

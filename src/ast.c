@@ -1,4 +1,4 @@
-#include "include/mzna.h"
+#include "include/parse.h"
 
 ast_node_t* ast_node_new(node_type_t ntype, node_relation_t nrelation) {}
 void ast_node_init(ast_node_t* node) {}

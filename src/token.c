@@ -1,4 +1,6 @@
-#include "include/mzna.h"
+#include "include/lex.h"
+#include <string.h>         // strcpy
+#include <stdlib.h>         // malloc, realloc, free
 
 void token_stream_init(token_stream_t* ts) {
     ts->max = TOKEN_STREAM_BUFFER;

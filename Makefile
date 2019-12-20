@@ -19,3 +19,7 @@ $(outdir)lex.o: $(indir)lex.c
 
 $(outdir)token.o: $(indir)token.c
 	$(cc) -o $(outdir)token.o -c $(indir)token.c $(ccopts)
+
+clean:
+	rm -f $(outdir)*.o
+	rm -f $(outdir)mzna

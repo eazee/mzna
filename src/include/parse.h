@@ -1,6 +1,8 @@
 #ifndef _parse_h
 #define _parse_h
 
+#include <stddef.h>     // size_t
+
 typedef enum { ROOT, ASSIGN, LITERAL, VARIABLe, BINOP, COMPOP, FUNCTION, CALL, BLOCK } node_type_t;
 typedef enum { CONDITION, BODY, IFBODY, ELSEBODY, PARAMETER, SOURCE, DESTINATION } node_relation_t;
 typedef union {
@@ -11,8 +13,8 @@ typedef struct {
     node_type_t     type;
     node_relation_t relation;
     ast_value_t     value;
-    int             n_children;
-    int             buffer_size;
+    size_t           n_children;
+    size_t           buffer_size;
     ast_node_t**    children;
 } ast_node_t;
 

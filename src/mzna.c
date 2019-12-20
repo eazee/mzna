@@ -1,4 +1,6 @@
 #include "include/mzna.h"
+#include "include/lex.h"
+#include <stdio.h>          // fprintf, fopen, fclose
 
 int begin_compile(FILE* infile) {
     // Initialise
