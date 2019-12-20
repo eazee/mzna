@@ -19,7 +19,7 @@ char peek(FILE *infile) {
     return c;
 }
 
-int lex(FILE* infile, TokenStream* ts) {
+int lex(FILE* infile, token_stream_t* ts) {
     int row = 1, col = 0;
     char c;
 
@@ -44,18 +44,18 @@ int lex(FILE* infile, TokenStream* ts) {
 
         // Colon (:)
         if(c == ':') {
-            TokenStream_add(ts, row, col, ":", COLON);
+            token_stream_add(ts, row, col, ":", COLON);
             continue;
         }
 
         // Assignment operator (->) OR minus sign
         if(c == '-') {
             if(peek(infile) == '>') {
-                TokenStream_add(ts, row, col, "->", ASSOP);
+                token_stream_add(ts, row, col, "->", ASSOP);
                 nextch(infile, &row, &col);
                 continue;
             } else {
-                TokenStream_add(ts, row, col, "-", MINUSOP);
+                token_stream_add(ts, row, col, "-", MINUSOP);
                 continue;
             }
         }
@@ -79,7 +79,7 @@ int lex(FILE* infile, TokenStream* ts) {
             } while(isdigit(c) || c == '.');
             ungetc(c, infile);
             numstr[i] = '\0';
-            TokenStream_add(ts, row, col, numstr, NUMBER);
+            token_stream_add(ts, row, col, numstr, NUMBER);
             free(numstr);
             continue;
         }
@@ -104,11 +104,11 @@ int lex(FILE* infile, TokenStream* ts) {
             ungetc(c, infile);
             identstr[i] = '\0';
             if(strcmp(identstr, "in") == 0) {
-                TokenStream_add(ts, srow, scol, identstr, IN);
+                token_stream_add(ts, srow, scol, identstr, IN);
             } else if(strcmp(identstr, "program") == 0) {
-                TokenStream_add(ts, srow, scol, identstr, PROGRAM);
+                token_stream_add(ts, srow, scol, identstr, PROGRAM);
             } else {
-                TokenStream_add(ts, srow, scol, identstr, IDENT);
+                token_stream_add(ts, srow, scol, identstr, IDENT);
             }
             free(identstr);
             continue;
@@ -138,7 +138,7 @@ int lex(FILE* infile, TokenStream* ts) {
                 }
             }
             litstr[i] = '\0';
-            TokenStream_add(ts, srow, scol, litstr, STRING);
+            token_stream_add(ts, srow, scol, litstr, STRING);
             free(litstr);
             continue;
         }

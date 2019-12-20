@@ -5,6 +5,6 @@ typedef enum {} node_type_t;
 typedef struct {} ast_node_t;
 
 /* parse.c */
-int parse(TokenStream* ts);
+int parse(token_stream_t* ts);
 
 #endif /* _parse_h */

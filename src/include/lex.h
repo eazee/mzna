@@ -18,19 +18,19 @@ typedef struct {
     int col;
     char* value;
     token_type_t type;
-} Token;
+} token_t;
 typedef struct {
     size_t max;
     size_t size;
-    Token* stream;
-} TokenStream;
+    token_t* stream;
+} token_stream_t;
 
 /* lex.c */
-int lex(FILE* infile, TokenStream* ts);
+int lex(FILE* infile, token_stream_t* ts);
 
 /* token.c */
-void TokenStream_init(TokenStream* ts);
-void TokenStream_add(TokenStream* ts, int row, int col, char* value, token_type_t toktype);
-void TokenStream_destroy(TokenStream* ts);
+void token_stream_init(token_stream_t* ts);
+void token_stream_add(token_stream_t* ts, int row, int col, char* value, token_type_t toktype);
+void token_stream_destroy(token_stream_t* ts);
 
 #endif /* _lex_h */

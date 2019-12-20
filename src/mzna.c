@@ -2,8 +2,8 @@
 
 int begin_compile(FILE* infile) {
     // Initialise
-    TokenStream ts;
-    TokenStream_init(&ts);
+    token_stream_t ts;
+    token_stream_init(&ts);
 
     // Run compilation
     lex(infile, &ts);
@@ -15,7 +15,7 @@ int begin_compile(FILE* infile) {
 
     // Clean up
     fclose(infile);
-    TokenStream_destroy(&ts);
+    token_stream_destroy(&ts);
     return 0;
 }
 
