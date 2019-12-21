@@ -7,12 +7,15 @@
 #include "lex.h"
 #include <stddef.h>     // size_t
 
-typedef enum { ROOT, ASSIGN, LITERAL, VARIABLE, BINOP, COMP, FUNCTION, CALL, BLOCK } node_type_t;
-typedef enum { NOREL, CONDITION, BODY, IFBODY, ELSEBODY, PARAMETER, SOURCE, DESTINATION } node_relation_t;
-typedef enum { NOVAL, STRINGVAL, INTVAL } node_value_type_t;
+typedef enum { ROOT, ASSIGN, LITERAL, VARIABLE, BINOP, COMP, FUNCTION, CALL, BLOCK, DATATYPE } node_type_t;
+typedef enum { NOREL, CONDITION, BODY, IFBODY, ELSEBODY, PARAMETER, SOURCE, DESTINATION, RETTYPE } node_relation_t;
+typedef enum { NOVAL, STRINGVAL, INTVAL, TYPEVAL } node_value_type_t;
+typedef enum { DATASTR, DATANUM, DATABOOL, DATAVOID } data_type_t;
+
 typedef union {
-    char* string;
-    int   integer;
+    char*       string;
+    int         integer;
+    data_type_t type;
 } node_value_t;
 typedef struct ast_node {
     node_type_t       type;
@@ -30,13 +33,15 @@ typedef struct {
 } parse_stream_t;
 
 /* ast.c */
-void ast_node_init(ast_node_t* node, node_type_t ntype, node_relation_t nrelation);
+ast_node_t* ast_node_new(node_type_t ntype, node_relation_t nrelation);
 void ast_node_assign_integer(ast_node_t* node, int nvalue);
 void ast_node_assign_string(ast_node_t* node, char* nvalue);
+void ast_node_assign_type(ast_node_t* node, data_type_t ntype);
 void ast_node_add_child(ast_node_t* parent_node, ast_node_t* child_node);
 void ast_node_destroy(ast_node_t* node);
+void ast_node_print_tree(ast_node_t* node, int level);
 
 /* parse.c */
-int parse(token_stream_t* ts);
+int parse(token_stream_t* ts, ast_node_t* root_node);
 
 #endif /* _parse_h */

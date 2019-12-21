@@ -2,16 +2,22 @@
 #include "include/lex.h"
 #include "include/parse.h"
 #include <stdio.h>          // fprintf, fopen, fclose
+#include <stdlib.h>         // malloc
 
 int begin_compile(FILE* infile) {
     // Initialise
     token_stream_t ts;
     token_stream_init(&ts);
 
+    ast_node_t* root_node = ast_node_new(ROOT, NOREL);
+
     // Run compilation
     if(lex(infile, &ts) == 0) {
         printf("[Log] Tokenisation complete. Found %d tokens.\n", ts.size);
-        if(parse(&ts) == 0) {
+        if(parse(&ts, root_node) == 0) {
+            // DEBUG PARSE TREE
+            ast_node_print_tree(root_node, 0);
+            // end
             printf("[Log] Parse complete.\n");
             // continue rest of compulation
         }
@@ -20,6 +26,8 @@ int begin_compile(FILE* infile) {
     // Clean up
     fclose(infile);
     token_stream_destroy(&ts);
+    ast_node_destroy(root_node);
+
     return 0;
 }
 
