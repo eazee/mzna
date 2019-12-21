@@ -24,6 +24,11 @@ typedef struct ast_node {
     struct ast_node** children;
 } ast_node_t;
 
+typedef struct {
+    size_t          i;
+    token_stream_t* t;
+} parse_stream_t;
+
 /* ast.c */
 void ast_node_init(ast_node_t* node, node_type_t ntype, node_relation_t nrelation);
 void ast_node_assign_integer(ast_node_t* node, int nvalue);

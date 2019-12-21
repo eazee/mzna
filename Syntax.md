@@ -19,7 +19,7 @@ number     := [0-9]+ | ([0.9])*.([0-9])+
 char       := any character (a, b, c, 0, 1, 2, etc.)
 bool       := "true" | "false"
 ident      := [a-Z]([a-Z | 0-9 | _])*
-type       := "number" | "bool" | "string" | ident
+type       := "number" | "bool" | "string" | "void"
 
 ass_op     := "->" | "+->" | "*->" | "/->" | "-->"
 param_op   := "<-"

@@ -173,7 +173,7 @@ int lex(FILE* infile, token_stream_t* ts) {
             continue;
         }
 
-        // Idents and keywords
+        // Idents and keywords (types)
         if(isalpha(c)) {
             size_t strsize  = INIT_IDENT_BUFFER;
             char*  identstr = malloc(strsize);
@@ -200,10 +200,8 @@ int lex(FILE* infile, token_stream_t* ts) {
             }
 
             identstr[i] = '\0';
-            if(strcmp(identstr, "in") == 0) {
-                token_stream_add(ts, srow, scol, identstr, IN);
-            } else if(strcmp(identstr, "program") == 0) {
-                token_stream_add(ts, srow, scol, identstr, PROGRAM);
+            if(strcmp(identstr, "num") == 0 || strcmp(identstr, "bool") == 0 || strcmp(identstr, "void") == 0 || strcmp(identstr, "string") == 0) {
+                token_stream_add(ts, srow, scol, identstr, TYPE);
             } else {
                 token_stream_add(ts, srow, scol, identstr, IDENT);
             }
@@ -232,9 +230,9 @@ int lex(FILE* infile, token_stream_t* ts) {
             }
 
             if(term == -1) {
-                fprintf(stderr, "[%sParser Error%s] Unexpected end of file. Expecting termination of string literal at Row %d, Col %d\n",
+                fprintf(stderr, "[%Syntax Error%s] Unexpected end of file. Expecting termination of string literal at Row %d, Col %d\n",
                     TRM_RED_BOLD, TRM_RESET, row, col);
-                return 1;
+                return -1;
             }
 
             strlit[len] = '\0';
@@ -245,8 +243,8 @@ int lex(FILE* infile, token_stream_t* ts) {
         }
 
         // Catch all else as error
-        fprintf(stderr, "[%sParser Error%s] Unexpected '%c' at Row %d, Col %d\n", TRM_RED_BOLD, TRM_RESET, c, row, col);
-        return 1;
+        fprintf(stderr, "[%Syntax Error%s] Unexpected '%c' at Row %d, Col %d\n", TRM_RED_BOLD, TRM_RESET, c, row, col);
+        return -1;
     }
-    return 1;
+    return 0;
 }

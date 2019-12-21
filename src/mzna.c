@@ -9,14 +9,13 @@ int begin_compile(FILE* infile) {
     token_stream_init(&ts);
 
     // Run compilation
-    lex(infile, &ts);
-
-    for(int i = 0; i < ts.size; i++) {
-        char tokstr[16];
-        printf("[%sToken%s at %d:%d] %d (%s)\n", TRM_BLUE_BOLD, TRM_RESET, ts.stream[i].row, ts.stream[i].col, ts.stream[i].type, ts.stream[i].value);
+    if(lex(infile, &ts) == 0) {
+        printf("[Log] Tokenisation complete. Found %d tokens.\n", ts.size);
+        if(parse(&ts) == 0) {
+            printf("[Log] Parse complete.\n");
+            // continue rest of compulation
+        }
     }
-
-    parse(&ts);
 
     // Clean up
     fclose(infile);
