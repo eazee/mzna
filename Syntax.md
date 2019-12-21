@@ -1,7 +1,6 @@
 # Syntax
 ```
-program    := filehead  colon (function | assignment)* end
-filehead   := "in"  string   "program"   string
+program    := (function | assignment)*
 function   := ident  (type)  (params)  block
 params     := param_op   (value  type  (, value type)+)
 block      := colon  (statement)*  end

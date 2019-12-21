@@ -1,5 +1,6 @@
 #include "include/mzna.h"
 #include "include/lex.h"
+#include "include/parse.h"
 #include <stdio.h>          // fprintf, fopen, fclose
 
 int begin_compile(FILE* infile) {
@@ -14,6 +15,8 @@ int begin_compile(FILE* infile) {
         char tokstr[16];
         printf("[%sToken%s at %d:%d] %d (%s)\n", TRM_BLUE_BOLD, TRM_RESET, ts.stream[i].row, ts.stream[i].col, ts.stream[i].type, ts.stream[i].value);
     }
+
+    parse(&ts);
 
     // Clean up
     fclose(infile);

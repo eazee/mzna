@@ -4,23 +4,24 @@
 #define INIT_NODE_BUFFER 3;
 #define INCR_NODE_BUFFER 2;
 
+#include "lex.h"
 #include <stddef.h>     // size_t
 
-typedef enum { ROOT, ASSIGN, LITERAL, VARIABLE, BINOP, COMPOP, FUNCTION, CALL, BLOCK } node_type_t;
-typedef enum { CONDITION, BODY, IFBODY, ELSEBODY, PARAMETER, SOURCE, DESTINATION } node_relation_t;
-typedef enum { STRING, INTEGER, NONE } node_value_type_t;
+typedef enum { ROOT, ASSIGN, LITERAL, VARIABLE, BINOP, COMP, FUNCTION, CALL, BLOCK } node_type_t;
+typedef enum { NOREL, CONDITION, BODY, IFBODY, ELSEBODY, PARAMETER, SOURCE, DESTINATION } node_relation_t;
+typedef enum { NOVAL, STRINGVAL, INTVAL } node_value_type_t;
 typedef union {
     char* string;
     int   integer;
 } node_value_t;
-typedef struct {
+typedef struct ast_node {
     node_type_t       type;
     node_relation_t   relation;
     node_value_t      value;
     node_value_type_t value_type;
     size_t            n_children;
     size_t            buffer_size;
-    ast_node_t**      children;
+    struct ast_node** children;
 } ast_node_t;
 
 /* ast.c */
