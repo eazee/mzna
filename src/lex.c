@@ -42,8 +42,16 @@ int lex(FILE* infile, token_stream_t* ts) {
         c = nextch(infile, &row, &col);
         if(c == EOF) break;
 
-        // FOR NOW just ignore newlines
-        if(c == '\n') continue;
+        // Make newline token
+        if(c == '\n') {
+            char pc = peek(infile);
+            token_stream_add(ts, row, col, "\n", NEWLINE);
+            while(pc == '\n') {
+                c = nextch(infile, &row, &col);
+                pc = peek(infile);
+            }
+            continue;
+        }
 
         // Ignore whitespace
         if(c == ' ') continue;

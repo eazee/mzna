@@ -3,6 +3,9 @@
 program    := (function | assignment)*
 function   := ident  (type)  (params)  block
 params     := param_op   (value  type  (, value type)+)
+block      := (singleblock | multiblock)
+singleblock := colon statement end
+multiblock := colon  newline  ( statement  (newline  statement)* )  end
 block      := colon  (statement)*  end
 statement  := assignment | call | if | while
 call       := ident  (param_op   value  (,  (value)+))
@@ -24,5 +27,6 @@ type       := "number" | "bool" | "string" | "void"
 ass_op     := "->" | "+->" | "*->" | "/->" | "-->"
 param_op   := "<-"
 colon      := ":"
+newline    := "\n"
 end        := "end"
 ```

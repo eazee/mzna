@@ -13,10 +13,10 @@
 
 #include <stdio.h>      // FILE, fgetc, ungetc, fprintf, size_t
 
-typedef enum { IDENT, IN, PROGRAM, STRING, NUMBER, ASSOP, PARAMOP,
+typedef enum { IDENT, STRING, NUMBER, ASSOP, PARAMOP,
     COLON, ADDOP, MINUSOP, MULTOP, DIVOP, GREATERTHAN, GREATERTHANOREQ,
     LESSTHAN, LESSTHANOREQ, COMPOP, COMMA, TYPE, ADDASSOP, MINUSASSOP,
-    DIVASSOP, MULTASSOP  } token_type_t;
+    DIVASSOP, MULTASSOP, NEWLINE } token_type_t;
 typedef struct {
     int row;
     int col;

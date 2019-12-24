@@ -8,27 +8,34 @@ int begin_compile(FILE* infile) {
     // Initialise
     token_stream_t ts;
     token_stream_init(&ts);
+    int status = -1;        // assume failure until successful compile gives status of 0
 
-    ast_node_t* root_node = ast_node_new(ROOT, NOREL);
+    ast_node_t* root_node = ast_node_new(ROOT, NOREL, DATAVOID);
 
     // Run compilation
+    printf("[Log] === Lexer ===\n");
     if(lex(infile, &ts) == 0) {
         printf("[Log] Tokenisation complete. Found %d tokens.\n", ts.size);
+        for(int i = 0; i < ts.size; i++) {
+            printf("[[[TOKEN]]] %d: %s\n", ts.stream[i].type, ts.stream[i].value);
+        }
+        printf("[Log] === Parser ===\n");
         if(parse(&ts, root_node) == 0) {
-            // DEBUG PARSE TREE
-            ast_node_print_tree(root_node, 0);
-            // end
-            printf("[Log] Parse complete.\n");
-            // continue rest of compulation
+            
+            status = 0; // assume success
+
         }
     }
 
+    ast_node_print_tree(root_node, 0);  // DEBUG
+
     // Clean up
+    printf("[Log] === Cleaning up ===\n");
     fclose(infile);
     token_stream_destroy(&ts);
     ast_node_destroy(root_node);
 
-    return 0;
+    return status;
 }
 
 FILE* try_file(char* filename) {
