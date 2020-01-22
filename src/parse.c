@@ -25,27 +25,56 @@ data_type_t type_from_ident(char* ident) {
     return DATAVOID;
 }
 
+/* if         := "if" expression ifblock
+   ifblock    := colon  (statement)*  ("elif" statement*) ("else" statement*) end */
+int if_statement(parse_stream_t* ps, ast_node_t* node);
+
+/* while      := "while" expression  block */
+int while_statement(parse_stream_t* ps, ast_node_t* node);
+
+/* statement  := assignment | call | if | while */
+int statement(parse_stream_t* ps, ast_node_t* node) {}
+
 /*
 block      := (singleblock | multiblock)
-singleblock := colon statement end
+singleblock := colon statement
 multiblock := colon  newline  ( statement  (newline  statement)* )  end
 */
 int one_line_block(parse_stream_t* ps, ast_node_t* node) {
-    return 0;
-}
-
-int multi_line_block(parse_stream_t* ps, ast_node_t* node) {
-    return 0;
-}
-
-int block(parse_stream_t* ps, ast_node_t* node, node_relation_t relation, data_type_t nconstraint) {
     if(check_type(ps, 0, COLON)) {
-        ast_node_t* block_node = ast_node_new(BLOCK, relation, nconstraint);
-        ast_node_add_child(node, block_node);
+        ps->i++;
     } else {
         return -1;
     }
-    return 0;
+    return statement(ps, node);
+}
+
+int multi_line_block(parse_stream_t* ps, ast_node_t* node) {
+    if(check_type(ps, 0, COLON)) {
+        ps->i++;
+    } else {
+        return -1;
+    }
+    if(check_type(ps, 0, NEWLINE)) {
+        ps->i++;
+    } else {
+        fprintf(stderr, "[%sSyntax Error%s] Expecting newline, near Line %d Col %d")
+        return -1;
+    }
+}
+
+int block(parse_stream_t* ps, ast_node_t* node, node_relation_t relation, data_type_t nconstraint) {
+    if(check_type(ps, 0, COLON) != 1) {
+        fprintf(stderr, "[%sSyntax Error%s] Expecting colon at start of block, near Line %d Col %d",
+            TRM_RED_BOLD, TRM_RESET, ps->t->stream[ps->i].row, ps->t->stream[ps->i].col);
+        return -1;
+    }
+
+    ast_node_t* block_node = ast_node_new(BLOCK, relation, nconstraint);
+    ast_node_add_child(node, block_node);
+    if(check_type(ps, 1, NEWLINE))
+        return multi_line_block(ps, block_node);
+    return one_line_block(ps, block_node);
 }
 
 // params :=  param_op   (value  type  (, value type)+)
@@ -93,6 +122,11 @@ int function(parse_stream_t* ps, ast_node_t* node) {
 // program := (assignment | function)*
 int program(parse_stream_t* ps, ast_node_t* node) {
     while(has_space(ps)) { // * loop
+        // If loose newline
+        if(check_type(ps, 0, NEWLINE)) {
+            ps->i++;
+            continue;
+        }
         // If function declaration
         if( (check_type(ps, 0, IDENT) && (check_type(ps, 1, PARAMOP) || (check_type(ps, 1, TYPE) && check_type(ps, 2, PARAMOP)))) 
             || (check_type(ps, 0, IDENT) && check_type(ps, 1, COLON)) ) {
