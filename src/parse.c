@@ -58,7 +58,7 @@ int multi_line_block(parse_stream_t* ps, ast_node_t* node) {
     if(check_type(ps, 0, NEWLINE)) {
         ps->i++;
     } else {
-        fprintf(stderr, "[%sSyntax Error%s] Expecting newline, near Line %d Col %d")
+        fprintf(stderr, "[%sSyntax Error%s] Expecting newline, near Line %d Col %d");
         return -1;
     }
 }
